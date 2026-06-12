@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.venv/
+venv/
+
+# 빌드 산출물 (입력 .md에서 재생성 가능)
+*.pptx
+!templates/*.pptx
+!templates/**/*.pptx
