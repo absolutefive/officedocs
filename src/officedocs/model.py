@@ -51,7 +51,15 @@ class Image:
     alt: str = ""
 
 
-Block = Union[Paragraph, Table, Image]
+@dataclass
+class CodeBlock:
+    """코드 블록. 다크 코드 윈도우(라운드 카드 + 신호등 점 + 파일명)로 렌더링된다."""
+
+    lines: List[str]
+    label: str = ""  # 파일명 또는 언어 표시
+
+
+Block = Union[Paragraph, Table, Image, CodeBlock]
 
 
 @dataclass
@@ -60,6 +68,7 @@ class Slide:
 
     layout: Optional[str] = None     # 시맨틱 레이아웃 이름 (없으면 자동 결정)
     title: Optional[str] = None
+    eyebrow: Optional[str] = None    # 제목 위 강조 라벨 (포인트 컬러)
     blocks: List[Block] = field(default_factory=list)
     left: List[Block] = field(default_factory=list)   # two-content 좌측
     right: List[Block] = field(default_factory=list)  # two-content 우측

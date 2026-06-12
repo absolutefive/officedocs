@@ -14,6 +14,9 @@
 - ``::: notes`` ~ ``:::`` 블록은 발표자 노트가 된다.
 - ``::: left`` / ``::: right`` ~ ``:::`` 블록은 two-content 레이아웃의
   좌/우 영역에 배치된다.
+- ``` ``` ``` 코드 펜스는 다크 코드 윈도우가 된다. 펜스 정보 문자열은
+  파일명/언어 라벨로 표시된다 (예: ``` ```grill-me.md ``` ).
+- ``<!-- eyebrow: TEXT -->`` 는 제목 위의 포인트 컬러 강조 라벨이 된다.
 - 인라인 서식: ``**굵게**``, ``*기울임*``, `` `코드` ``.
 """
 
@@ -22,7 +25,7 @@ from __future__ import annotations
 import re
 from typing import Dict, List, Optional, Tuple
 
-from officedocs.model import Block, Deck, Image, Paragraph, Run, Slide, Table
+from officedocs.model import Block, CodeBlock, Deck, Image, Paragraph, Run, Slide, Table
 
 _DIRECTIVE_RE = re.compile(r"^<!--\s*([\w-]+)\s*:\s*(.*?)\s*-->$")
 _HEADING_RE = re.compile(r"^(#{1,6})\s+(.*)$")
@@ -153,6 +156,8 @@ def _parse_slide(lines: List[str]) -> Slide:
                         f"알 수 없는 레이아웃 '{value}'. 사용 가능: {sorted(VALID_LAYOUTS)}"
                     )
                 slide.layout = value
+            elif key == "eyebrow":
+                slide.eyebrow = directive.group(2)  # 대소문자 유지
             i += 1
             continue
 
@@ -174,6 +179,16 @@ def _parse_block_line(lines: List[str], i: int, target: List[Block]) -> int:
 
     if not stripped:
         return i + 1
+
+    if stripped.startswith("```"):
+        label = stripped[3:].strip()
+        code_lines: List[str] = []
+        j = i + 1
+        while j < len(lines) and lines[j].strip() != "```":
+            code_lines.append(lines[j].rstrip())
+            j += 1
+        target.append(CodeBlock(lines=code_lines, label=label))
+        return j + 1  # 닫는 펜스 건너뜀 (없으면 슬라이드 끝까지)
 
     image = _IMAGE_RE.match(stripped)
     if image:

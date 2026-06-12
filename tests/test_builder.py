@@ -152,6 +152,65 @@ def test_prototype_table_and_image_native():
     assert pics
 
 
+AGENTOS_EXAMPLE = ROOT / "examples" / "agentos-sample.md"
+
+
+def _build_agentos(colorway="teal"):
+    deck = parse_document(AGENTOS_EXAMPLE.read_text(encoding="utf-8"))
+    prs = build_deck(
+        deck, TEMPLATES / "agentos" / f"{colorway}.pptx", base_dir=AGENTOS_EXAMPLE.parent
+    )
+    buf = io.BytesIO()
+    prs.save(buf)
+    buf.seek(0)
+    return Presentation(buf)
+
+
+@pytest.mark.parametrize("colorway", ["teal", "blue", "red", "orange"])
+def test_build_with_agentos_templates(colorway):
+    prs = _build_agentos(colorway)
+    assert len(prs.slides) == 7
+    assert prs.slide_width == 12192000  # 13.33in 와이드
+
+
+def test_code_window_rendered_as_shapes():
+    prs = _build_agentos()
+    from pptx.enum.shapes import MSO_SHAPE_TYPE as ST
+    for slide in prs.slides:
+        code_texts = [
+            s for s in slide.shapes
+            if s.has_text_frame and "Grill Me Skill" in s.text_frame.text
+        ]
+        if code_texts:
+            autoshapes = [s for s in slide.shapes if s.shape_type == ST.AUTO_SHAPE]
+            # 윈도우 + 헤더 + 신호등 점 3개 = 도형 5개 이상
+            assert len(autoshapes) >= 5
+            labels = [
+                s for s in slide.shapes
+                if s.has_text_frame and s.text_frame.text == "grill-me.md"
+            ]
+            assert labels, "파일명 라벨이 있어야 한다"
+            return
+    pytest.fail("코드 윈도우 슬라이드를 찾지 못함")
+
+
+def test_eyebrow_rendered_above_title():
+    prs = _build_agentos()
+    for slide in prs.slides:
+        eyebrows = [
+            s for s in slide.shapes
+            if s.has_text_frame and "6 TRAPS" in s.text_frame.text
+        ]
+        if eyebrows:
+            titles = [
+                s for s in slide.shapes
+                if s.has_text_frame and "6가지 함정" in s.text_frame.text
+            ]
+            assert titles and eyebrows[0].top < titles[0].top
+            return
+    pytest.fail("아이브로우 슬라이드를 찾지 못함")
+
+
 def test_missing_image_raises(tmp_path):
     doc = tmp_path / "doc.md"
     doc.write_text("# x\n![](no-such.png)", encoding="utf-8")

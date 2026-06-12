@@ -1,4 +1,4 @@
-from officedocs.model import Image, Paragraph, Table
+from officedocs.model import CodeBlock, Image, Paragraph, Table
 from officedocs.parser import parse_document, parse_inline
 
 SAMPLE = """\
@@ -130,6 +130,31 @@ def test_no_frontmatter():
     assert deck.meta == {}
     assert len(deck.slides) == 1
     assert deck.slides[0].title == "단독 슬라이드"
+
+
+def test_code_fence():
+    deck = parse_document(
+        "# 코드\n```grill-me.md\n# Grill Me Skill\n\nInterview me.\n```\n맺음말"
+    )
+    slide = deck.slides[0]
+    codes = [b for b in slide.blocks if isinstance(b, CodeBlock)]
+    assert len(codes) == 1
+    assert codes[0].label == "grill-me.md"
+    # 코드 내부의 #, 빈 줄이 그대로 보존되어야 한다
+    assert codes[0].lines == ["# Grill Me Skill", "", "Interview me."]
+    assert slide.blocks[-1].text == "맺음말"
+
+
+def test_unclosed_code_fence_runs_to_end():
+    deck = parse_document("# t\n```\nline1\nline2")
+    codes = [b for b in deck.slides[0].blocks if isinstance(b, CodeBlock)]
+    assert codes[0].lines == ["line1", "line2"]
+
+
+def test_eyebrow_directive():
+    deck = parse_document("<!-- eyebrow: TRAP #1 -->\n# 제목\n- 항목")
+    assert deck.slides[0].eyebrow == "TRAP #1"
+    assert deck.slides[0].title == "제목"
 
 
 def test_escaped_pipe_in_table_cell():

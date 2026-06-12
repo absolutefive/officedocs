@@ -96,6 +96,8 @@ template: templates/dark.pptx   # 선택: 문서에 템플릿 고정 (-t 옵션�
 | `![대체텍스트](경로)` | 그림 개체 (입력 문서 기준 상대 경로) |
 | `::: notes` ~ `:::` | 발표자 노트 |
 | `::: left` / `::: right` ~ `:::` | 2단 레이아웃의 좌/우 영역 |
+| ` ```파일명 ` ~ ` ``` ` | 다크 코드 윈도우 (라운드 카드 + 신호등 점 + 파일명 헤더) |
+| `<!-- eyebrow: TEXT -->` | 제목 위 포인트 컬러 강조 라벨 (색은 템플릿 테마의 강조1을 따름) |
 
 레이아웃을 지정하지 않으면 내용 구성에 따라 자동 결정됩니다(좌/우 영역이 있으면 `two-content`, 본문이 있으면 `content` 등).
 
@@ -156,9 +158,11 @@ officedocs layouts 회사공식템플릿.pptx
 
 - `templates/default.pptx`(밝은 기본 테마), `templates/dark.pptx`(어두운 테마) — 레이아웃 방식. `scripts/make_templates.py`로 재생성할 수 있습니다.
 - `templates/tomato/typeA-landscape.pptx` 외 4종(TypeA/TypeB × 가로/세로) — 토마토시스템 문서 템플릿. 프로토타입 방식의 실전 예시로, 각각 사이드카 `*.layouts.json`이 함께 있습니다.
+- `templates/agentos/{teal,blue,red,orange}.pptx` — AgentOS 스타일 컬러웨이 4종 (16:9 와이드). 화이트 배경 / 포인트 컬러 / Pretendard 초고굵기 타이틀 + 검정 대시 / 포인트 컬러 글머리 기호. pptxgenjs 기반 디자인(`scripts/reference/gen_deck.js`)의 토큰을 이식해 `scripts/make_agentos_templates.py`로 생성하며, 스크립트의 `PALETTES`만 수정하면 새 컬러웨이를 추가할 수 있습니다. 아이브로우·코드 윈도우 문법과 함께 쓰면 원본 디자인에 가장 가깝습니다 — 예시: [`examples/agentos-sample.md`](examples/agentos-sample.md). (Pretendard/D2Coding 글꼴이 없는 시스템에서는 기본 글꼴로 대체 표시됩니다.)
 
 ```bash
 officedocs build examples/sample.md -t templates/tomato/typeA-landscape.pptx -o out.pptx
+officedocs build examples/agentos-sample.md -t templates/agentos/blue.pptx -o out.pptx
 ```
 
 ## Python API

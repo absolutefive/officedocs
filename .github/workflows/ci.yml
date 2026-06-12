@@ -18,7 +18,9 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - run: pip install -e .[dev]
       - run: pytest -q
-      - name: Build example deck with both bundled templates
+      - name: Build example decks with bundled templates
         run: |
           officedocs build examples/sample.md -t templates/default.pptx -o /tmp/out-default.pptx
           officedocs build examples/sample.md -t templates/dark.pptx -o /tmp/out-dark.pptx
+          officedocs build examples/sample.md -t templates/tomato/typeA-landscape.pptx -o /tmp/out-tomato.pptx
+          officedocs build examples/agentos-sample.md -t templates/agentos/teal.pptx -o /tmp/out-agentos.pptx

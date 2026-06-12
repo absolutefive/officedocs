@@ -19,18 +19,29 @@ from pathlib import Path
 from typing import Dict, List, Optional
 
 from pptx import Presentation
-from pptx.enum.shapes import PP_PLACEHOLDER
+from pptx.dml.color import RGBColor
+from pptx.enum.shapes import MSO_SHAPE, PP_PLACEHOLDER
+from pptx.enum.text import MSO_ANCHOR
+from pptx.enum.dml import MSO_THEME_COLOR
 from pptx.oxml.ns import qn
 from pptx.util import Emu, Pt
 
 from officedocs.layouts import LayoutResolver, PrototypeSpec
-from officedocs.model import Block, Deck, Image, Paragraph, Run, Slide, Table
+from officedocs.model import Block, CodeBlock, Deck, Image, Paragraph, Run, Slide, Table
 
 _TITLE_TYPES = (PP_PLACEHOLDER.TITLE, PP_PLACEHOLDER.CENTER_TITLE)
 _BODY_TYPES = (PP_PLACEHOLDER.BODY, PP_PLACEHOLDER.OBJECT)
 _CODE_FONT = "Consolas"
 _TEXTBOX_FONT_SIZE = Pt(14)
 _INDENT_PER_LEVEL = Emu(228600)  # 0.25in
+
+# 다크 코드 윈도우 디자인 토큰 (AgentOS 스타일, gen_deck.js에서 이식)
+_CODE_BG = RGBColor.from_string("1F2335")
+_CODE_HEAD = RGBColor.from_string("171A2B")
+_CODE_TXT = RGBColor.from_string("E8EAF2")
+_CODE_DIM = RGBColor.from_string("8B90A5")
+_CODE_DOTS = ("ED6A5E", "F5BE4F", "61C554")  # 신호등 점: 빨강/노랑/초록
+_CODE_MONO = "D2Coding"
 
 # 프로토타입 슬라이드에서 복제 대상이 되는 도형 요소
 _CLONABLE_TAGS = tuple(
@@ -164,12 +175,17 @@ class DeckBuilder:
             return
 
         slide = self._prs.slides.add_slide(target)
+        title_ph = None
         if spec.title is not None:
             title_ph = _find_placeholder(slide, _TITLE_TYPES)
             if title_ph is not None:
                 title_ph.text_frame.text = spec.title
             else:
                 self._add_title_textbox(slide, spec.title)
+        if spec.eyebrow:
+            self._add_eyebrow(
+                slide, spec.eyebrow, title_ph, center=layout_name in ("title", "section")
+            )
 
         if layout_name == "title":
             self._fill_title_slide(slide, spec)
@@ -337,6 +353,31 @@ class DeckBuilder:
             rich_height = height if not text_blocks else Emu(int(height * 0.45))
             self._place_rich_blocks(slide, rich_blocks, (left, rich_top, width, rich_height))
 
+    def _add_eyebrow(self, slide, text: str, title_ph, center=False):
+        """제목 위의 포인트 컬러 강조 라벨. 색은 템플릿 테마의 강조1을 따른다."""
+        from pptx.enum.text import PP_ALIGN
+
+        sw, sh = self._prs.slide_width, self._prs.slide_height
+        if title_ph is not None:
+            left, width = title_ph.left, title_ph.width
+            # 센터형(표지/간지)은 인용 부호 장식과 겹치지 않게 더 위로
+            offset = 0.105 if center else 0.05
+            top = Emu(max(int(title_ph.top - Emu(int(sh * offset))), 0))
+        else:
+            left, width = Emu(int(sw * 0.04)), Emu(int(sw * 0.92))
+            top = Emu(int(sh * 0.02))
+        box = slide.shapes.add_textbox(left, top, width, Emu(int(sh * 0.045)))
+        tf = box.text_frame
+        tf.text = text
+        p = tf.paragraphs[0]
+        if center:
+            p.alignment = PP_ALIGN.CENTER
+        for run in p.runs:
+            run.font.size = Pt(11.5)
+            run.font.bold = True
+            run.font.color.theme_color = MSO_THEME_COLOR.ACCENT_1
+            run.font._rPr.set("spc", "300")  # 자간 3pt
+
     def _add_title_textbox(self, slide, title: str):
         """제목 자리표시자가 없는 레이아웃을 위한 대비책."""
         sw, sh = self._prs.slide_width, self._prs.slide_height
@@ -383,6 +424,8 @@ class DeckBuilder:
                 self._add_table(slide, block, left, cursor, width)
             elif isinstance(block, Image):
                 self._add_image(slide, block, left, cursor, width, per_block)
+            elif isinstance(block, CodeBlock):
+                self._add_code_window(slide, block, left, cursor, width, per_block)
             cursor = Emu(int(cursor + per_block))
 
     def _add_table(self, slide, table: Table, left, top, width):
@@ -401,6 +444,64 @@ class DeckBuilder:
                 if ri == 0 and table.has_header:
                     for run in tf.paragraphs[0].runs:
                         run.font.bold = True
+
+    def _add_code_window(self, slide, code: CodeBlock, left, top, width, max_height):
+        """다크 코드 윈도우: 라운드 카드 + 헤더(신호등 점, 파일명) + 모노 코드."""
+        head_h = Emu(int(Pt(28)))
+        body_h = Emu(int(Pt(20) * max(len(code.lines), 1) + Pt(24)))
+        height = Emu(min(int(head_h + body_h), int(max_height)))
+
+        win = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left, top, width, height)
+        win.adjustments[0] = 0.06
+        win.fill.solid()
+        win.fill.fore_color.rgb = _CODE_BG
+        win.line.fill.background()
+        win.shadow.inherit = False
+
+        head = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left, top, width, head_h)
+        head.adjustments[0] = 0.5
+        head.fill.solid()
+        head.fill.fore_color.rgb = _CODE_HEAD
+        head.line.fill.background()
+        head.shadow.inherit = False
+
+        dot_d = Emu(int(Pt(7)))
+        for i, color in enumerate(_CODE_DOTS):
+            dot = slide.shapes.add_shape(
+                MSO_SHAPE.OVAL,
+                Emu(int(left + Pt(14) + i * Pt(13))),
+                Emu(int(top + (head_h - dot_d) / 2)),
+                dot_d, dot_d,
+            )
+            dot.fill.solid()
+            dot.fill.fore_color.rgb = RGBColor.from_string(color)
+            dot.line.fill.background()
+            dot.shadow.inherit = False
+
+        if code.label:
+            label = slide.shapes.add_textbox(
+                Emu(int(left + Pt(56))), top, Emu(int(width - Pt(70))), head_h
+            )
+            label.text_frame.vertical_anchor = MSO_ANCHOR.MIDDLE
+            label.text_frame.text = code.label
+            for run in label.text_frame.paragraphs[0].runs:
+                run.font.name = _CODE_MONO
+                run.font.size = Pt(10)
+                run.font.color.rgb = _CODE_DIM
+
+        body = slide.shapes.add_textbox(
+            Emu(int(left + Pt(16))), Emu(int(top + head_h + Pt(8))),
+            Emu(int(width - Pt(32))), Emu(int(height - head_h - Pt(16))),
+        )
+        tf = body.text_frame
+        tf.word_wrap = True
+        for i, line in enumerate(code.lines or [""]):
+            p = tf.paragraphs[0] if i == 0 else tf.add_paragraph()
+            run = p.add_run()
+            run.text = line
+            run.font.name = _CODE_MONO
+            run.font.size = Pt(12.5)
+            run.font.color.rgb = _CODE_TXT
 
     def _add_image(self, slide, image: Image, left, top, width, max_height):
         path = Path(image.path)
