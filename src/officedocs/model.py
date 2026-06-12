@@ -59,7 +59,34 @@ class CodeBlock:
     label: str = ""  # 파일명 또는 언어 표시
 
 
-Block = Union[Paragraph, Table, Image, CodeBlock]
+@dataclass
+class Card:
+    """카드 한 장: 작은 라벨 + 큰 텍스트 + 보조 설명."""
+
+    big: str = ""
+    label: str = ""
+    sub: str = ""
+    tinted: bool = False  # 포인트 컬러 강조 카드
+
+
+@dataclass
+class CardGrid:
+    """라운드 카드 그리드. numbered면 라벨 대신 번호 원형 배지를 단다."""
+
+    cards: List[Card] = field(default_factory=list)
+    numbered: bool = False
+
+
+@dataclass
+class Bar:
+    """가로로 긴 강조 바(처방 바): 큰 단어 + 작은 라벨 + 본문 한 줄."""
+
+    word: str = ""
+    label: str = ""
+    text: str = ""
+
+
+Block = Union[Paragraph, Table, Image, CodeBlock, CardGrid, Bar]
 
 
 @dataclass

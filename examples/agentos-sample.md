@@ -28,6 +28,35 @@ template: templates/agentos/teal.pptx
 
 ---
 
+<!-- eyebrow: TRAP #1 -->
+# AI가 의도와 다른 걸 만든다
+
+::: cards
+- 내 머릿속 | 말하지 않은 가정 30개 | 의도는 저절로 전달되지 않는다
+- AI의 결과물 | 그럴듯하지만 다른 것 | 빠르게 · 자신 있게 · 어긋난다 {tinted}
+:::
+
+::: bar Grill Me
+THE PRESCRIPTION | 코드를 짜기 전에 — AI가 나를 심문하게 하라
+:::
+
+---
+
+<!-- eyebrow: TRAP #5 -->
+# 의존성 관리의 실종 — 3가지 구멍
+
+::: cards numbered
+- 아무거나 추가 | AI는 라이브러리를 망설이지 않는다
+- 검토 없는 버전 | 보안 · 라이선스 · 호환성 공백
+- 공급망 리스크 | npm 한 줄이 시스템 전체를 흔든다
+:::
+
+::: bar GATE
+THE PRESCRIPTION | 의존성 추가는 사람이 승인한다 — AI는 제안까지만
+:::
+
+---
+
 <!-- eyebrow: THE PRESCRIPTION -->
 # Grill Me — 심문해줘
 

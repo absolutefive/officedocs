@@ -24,16 +24,37 @@ from pptx.enum.shapes import MSO_SHAPE, PP_PLACEHOLDER
 from pptx.enum.text import MSO_ANCHOR
 from pptx.enum.dml import MSO_THEME_COLOR
 from pptx.oxml.ns import qn
-from pptx.util import Emu, Pt
+from pptx.util import Emu, Inches, Pt
 
 from officedocs.layouts import LayoutResolver, PrototypeSpec
-from officedocs.model import Block, CodeBlock, Deck, Image, Paragraph, Run, Slide, Table
+from officedocs.model import (
+    Bar,
+    Block,
+    Card,
+    CardGrid,
+    CodeBlock,
+    Deck,
+    Image,
+    Paragraph,
+    Run,
+    Slide,
+    Table,
+)
 
 _TITLE_TYPES = (PP_PLACEHOLDER.TITLE, PP_PLACEHOLDER.CENTER_TITLE)
 _BODY_TYPES = (PP_PLACEHOLDER.BODY, PP_PLACEHOLDER.OBJECT)
 _CODE_FONT = "Consolas"
 _TEXTBOX_FONT_SIZE = Pt(14)
 _INDENT_PER_LEVEL = Emu(228600)  # 0.25in
+
+# 카드/강조 바 디자인 토큰 (gen_deck.js에서 이식). 포인트 컬러는 템플릿
+# 테마의 강조1을 따라가므로 어떤 템플릿에서든 어울리게 렌더링된다.
+_CARD_GRAY = RGBColor.from_string("F4F4F5")
+_CARD_LINE = RGBColor.from_string("E9E9EC")
+_CARD_SUB = RGBColor.from_string("6B7077")
+_CARD_MUTED = RGBColor.from_string("8A8F98")
+_ARROW_GRAY = RGBColor.from_string("9AA0A6")
+_DISP_FONT = "Pretendard ExtraBold"
 
 # 다크 코드 윈도우 디자인 토큰 (AgentOS 스타일, gen_deck.js에서 이식)
 _CODE_BG = RGBColor.from_string("1F2335")
@@ -426,6 +447,10 @@ class DeckBuilder:
                 self._add_image(slide, block, left, cursor, width, per_block)
             elif isinstance(block, CodeBlock):
                 self._add_code_window(slide, block, left, cursor, width, per_block)
+            elif isinstance(block, CardGrid):
+                self._add_card_grid(slide, block, left, cursor, width, per_block)
+            elif isinstance(block, Bar):
+                self._add_bar(slide, block, left, cursor, width, per_block)
             cursor = Emu(int(cursor + per_block))
 
     def _add_table(self, slide, table: Table, left, top, width):
@@ -444,6 +469,167 @@ class DeckBuilder:
                 if ri == 0 and table.has_header:
                     for run in tf.paragraphs[0].runs:
                         run.font.bold = True
+
+    # --- 카드/강조 바 -------------------------------------------------------
+
+    def _add_round_card(self, slide, left, top, width, height, tinted: bool):
+        card = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left, top, width, height)
+        card.adjustments[0] = 0.12
+        card.fill.solid()
+        card.shadow.inherit = False
+        if tinted:
+            # 포인트 컬러를 옅게 깐 강조 카드: 강조1 + 투명도
+            card.fill.fore_color.theme_color = MSO_THEME_COLOR.ACCENT_1
+            clr = card._element.spPr.find(qn("a:solidFill"))[0]
+            clr.append(clr.makeelement(qn("a:alpha"), {"val": "10000"}))
+            card.line.color.theme_color = MSO_THEME_COLOR.ACCENT_1
+            card.line.width = Pt(1)
+        else:
+            card.fill.fore_color.rgb = _CARD_GRAY
+            card.line.color.rgb = _CARD_LINE
+            card.line.width = Pt(0.75)
+        return card
+
+    @staticmethod
+    def _styled_para(tf, first: bool, text: str, *, size, bold=False, display=False,
+                     accent=False, ink=False, color=None, spacing=None, align=None):
+        from pptx.enum.text import PP_ALIGN
+
+        p = tf.paragraphs[0] if first else tf.add_paragraph()
+        if align == "center":
+            p.alignment = PP_ALIGN.CENTER
+        run = p.add_run()
+        run.text = text
+        run.font.size = Pt(size)
+        run.font.bold = bold or None
+        if display:
+            run.font.name = _DISP_FONT
+        if accent:
+            run.font.color.theme_color = MSO_THEME_COLOR.ACCENT_1
+        elif ink:
+            run.font.color.theme_color = MSO_THEME_COLOR.TEXT_1
+        elif color is not None:
+            run.font.color.rgb = color
+        if spacing:
+            run.font._rPr.set("spc", str(spacing))
+        return p
+
+    def _add_card_grid(self, slide, grid: CardGrid, left, top, width, max_height):
+        n = len(grid.cards)
+        if n == 0:
+            return
+        cols = 2 if n >= 4 else n
+        rows = -(-n // cols)
+        is_pair = n == 2 and not grid.numbered
+        gap_x = Emu(int(Inches(0.9) if is_pair else Inches(0.28)))
+        gap_y = Emu(int(Inches(0.27)))
+        card_w = Emu(int((width - (cols - 1) * gap_x) / cols))
+        tall = grid.numbered or any(c.label or c.sub for c in grid.cards)
+        max_card_h = Inches(1.7) if tall else Inches(0.8)
+        card_h = Emu(min(int(max_card_h), int((max_height - (rows - 1) * gap_y) / rows)))
+
+        for i, card in enumerate(grid.cards):
+            col, row = i % cols, i // cols
+            x = Emu(int(left + col * (card_w + gap_x)))
+            y = Emu(int(top + row * (card_h + gap_y)))
+            self._add_round_card(slide, x, y, card_w, card_h, card.tinted)
+            if grid.numbered:
+                self._fill_numbered_card(slide, card, i + 1, x, y, card_w, card_h)
+            else:
+                self._fill_stack_card(slide, card, x, y, card_w, card_h)
+
+        if is_pair:
+            # 비교 카드 사이 화살표
+            arrow = slide.shapes.add_textbox(
+                Emu(int(left + card_w)), Emu(int(top + (card_h - Inches(0.6)) / 2)),
+                gap_x, Emu(int(Inches(0.6))),
+            )
+            arrow.text_frame.vertical_anchor = MSO_ANCHOR.MIDDLE
+            self._styled_para(arrow.text_frame, True, "→",
+                              size=28, color=_ARROW_GRAY, align="center")
+
+    def _fill_stack_card(self, slide, card: Card, x, y, w, h):
+        """가운데 정렬 스택 카드: 라벨 / 큰 텍스트 / 보조 설명."""
+        box = slide.shapes.add_textbox(
+            Emu(int(x + Inches(0.15))), y, Emu(int(w - Inches(0.3))), h
+        )
+        tf = box.text_frame
+        tf.word_wrap = True
+        tf.vertical_anchor = MSO_ANCHOR.MIDDLE
+        first = True
+        if card.label:
+            self._styled_para(
+                tf, first, card.label, size=10.5, bold=True, spacing=250,
+                align="center", accent=card.tinted,
+                color=None if card.tinted else _CARD_MUTED,
+            )
+            first = False
+        if card.big:
+            self._styled_para(
+                tf, first, card.big, size=21, bold=True, display=True,
+                align="center", accent=card.tinted, ink=not card.tinted,
+            )
+            first = False
+        if card.sub:
+            self._styled_para(tf, first, card.sub, size=12.5,
+                              color=_CARD_SUB, align="center")
+
+    def _fill_numbered_card(self, slide, card: Card, number: int, x, y, w, h):
+        """번호 원형 배지 + 좌측 정렬 텍스트 카드."""
+        badge_d = Emu(int(Inches(0.3)))
+        badge_y = Emu(int(y + Inches(0.25))) if card.sub else Emu(int(y + (h - badge_d) / 2))
+        badge = slide.shapes.add_shape(
+            MSO_SHAPE.OVAL, Emu(int(x + Inches(0.25))), badge_y, badge_d, badge_d
+        )
+        badge.fill.solid()
+        badge.fill.fore_color.theme_color = MSO_THEME_COLOR.ACCENT_1
+        badge.line.fill.background()
+        badge.shadow.inherit = False
+        btf = badge.text_frame
+        btf.margin_left = btf.margin_right = btf.margin_top = btf.margin_bottom = 0
+        self._styled_para(btf, True, str(number), size=11.5, bold=True,
+                          color=RGBColor.from_string("FFFFFF"), align="center")
+
+        box = slide.shapes.add_textbox(
+            Emu(int(x + Inches(0.68))), y, Emu(int(w - Inches(0.85))), h
+        )
+        tf = box.text_frame
+        tf.word_wrap = True
+        tf.vertical_anchor = MSO_ANCHOR.MIDDLE
+        self._styled_para(tf, True, card.big, size=15 if card.sub else 13.5,
+                          bold=True, display=bool(card.sub),
+                          accent=card.tinted, ink=not card.tinted)
+        if card.sub:
+            self._styled_para(tf, False, card.sub, size=11.5, color=_CARD_SUB)
+
+    def _add_bar(self, slide, bar: Bar, left, top, width, max_height):
+        """가로 강조 바: 큰 단어 + 작은 라벨 + 본문 (gen_deck.js의 처방 바)."""
+        height = Emu(min(int(Inches(0.92)), int(max_height)))
+        self._add_round_card(slide, left, top, width, height, tinted=True)
+
+        # 단어 폭 추정 (CJK는 넓게)
+        wide = sum(1 for ch in bar.word if ord(ch) > 0x2E80)
+        word_w = Emu(int(Inches(min(0.4 + wide * 0.3 + (len(bar.word) - wide) * 0.16, 3.5))))
+        if bar.word:
+            box = slide.shapes.add_textbox(Emu(int(left + Inches(0.3))), top, word_w, height)
+            box.text_frame.vertical_anchor = MSO_ANCHOR.MIDDLE
+            self._styled_para(box.text_frame, True, bar.word,
+                              size=20, bold=True, display=True, accent=True)
+
+        text_x = Emu(int(left + Inches(0.4) + (word_w if bar.word else 0)))
+        box = slide.shapes.add_textbox(
+            text_x, top, Emu(int(left + width - text_x - Inches(0.3))), height
+        )
+        tf = box.text_frame
+        tf.word_wrap = True
+        tf.vertical_anchor = MSO_ANCHOR.MIDDLE
+        first = True
+        if bar.label:
+            self._styled_para(tf, first, bar.label, size=9.5, bold=True,
+                              accent=True, spacing=250)
+            first = False
+        if bar.text:
+            self._styled_para(tf, first, bar.text, size=13.5, bold=True, ink=True)
 
     def _add_code_window(self, slide, code: CodeBlock, left, top, width, max_height):
         """다크 코드 윈도우: 라운드 카드 + 헤더(신호등 점, 파일명) + 모노 코드."""

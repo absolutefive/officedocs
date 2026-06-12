@@ -17,6 +17,12 @@
 - ``` ``` ``` 코드 펜스는 다크 코드 윈도우가 된다. 펜스 정보 문자열은
   파일명/언어 라벨로 표시된다 (예: ``` ```grill-me.md ``` ).
 - ``<!-- eyebrow: TEXT -->`` 는 제목 위의 포인트 컬러 강조 라벨이 된다.
+- ``::: cards`` ~ ``:::`` 는 라운드 카드 그리드가 된다. 각 ``- `` 항목이
+  카드 한 장이고 ``라벨 | 큰 텍스트 | 보조 설명`` 으로 나눈다(1~3개).
+  ``{tinted}`` 를 붙이면 포인트 컬러 강조 카드. ``::: cards numbered`` 는
+  라벨 대신 번호 원형 배지를 달고 ``큰 텍스트 | 보조 설명`` 으로 해석한다.
+- ``::: bar 단어`` ~ ``:::`` 는 가로 강조 바가 된다. 내용 한 줄을
+  ``라벨 | 본문`` 으로 나눈다.
 - 인라인 서식: ``**굵게**``, ``*기울임*``, `` `코드` ``.
 """
 
@@ -25,7 +31,19 @@ from __future__ import annotations
 import re
 from typing import Dict, List, Optional, Tuple
 
-from officedocs.model import Block, CodeBlock, Deck, Image, Paragraph, Run, Slide, Table
+from officedocs.model import (
+    Bar,
+    Block,
+    Card,
+    CardGrid,
+    CodeBlock,
+    Deck,
+    Image,
+    Paragraph,
+    Run,
+    Slide,
+    Table,
+)
 
 _DIRECTIVE_RE = re.compile(r"^<!--\s*([\w-]+)\s*:\s*(.*?)\s*-->$")
 _HEADING_RE = re.compile(r"^(#{1,6})\s+(.*)$")
@@ -34,6 +52,8 @@ _NUMBERED_RE = re.compile(r"^(\s*)\d+[.)]\s+(.*)$")
 _IMAGE_RE = re.compile(r"^!\[([^\]]*)\]\(([^)]+)\)\s*$")
 _TABLE_SEP_RE = re.compile(r"^\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)*\|?$")
 _FENCE_OPEN_RE = re.compile(r"^:::\s*(\w+)\s*$")
+_CARDS_OPEN_RE = re.compile(r"^:::\s*cards(?:\s+(numbered))?\s*$")
+_BAR_OPEN_RE = re.compile(r"^:::\s*bar(?:\s+(.*))?$")
 _INLINE_RE = re.compile(r"(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`)")
 
 VALID_LAYOUTS = {"title", "section", "content", "two-content", "title-only", "blank"}
@@ -107,6 +127,53 @@ def _parse_table(lines: List[str], start: int) -> Tuple[Table, int]:
     return Table(rows=rows, has_header=has_header), i
 
 
+def _split_parts(text: str) -> List[str]:
+    """``a | b | c`` 분리. 이스케이프 파이프(\\|)는 분리하지 않는다."""
+    guarded = text.replace("\\|", "\x00")
+    return [p.strip().replace("\x00", "|") for p in guarded.split("|")]
+
+
+def _parse_cards(lines: List[str], start: int, numbered: bool) -> Tuple[CardGrid, int]:
+    grid = CardGrid(numbered=numbered)
+    i = start
+    while i < len(lines) and lines[i].strip() != ":::":
+        stripped = lines[i].strip()
+        item = _BULLET_RE.match(stripped)
+        if item:
+            text = item.group(2).strip()
+            tinted = "{tinted}" in text
+            parts = _split_parts(text.replace("{tinted}", "").strip())
+            card = Card(tinted=tinted)
+            if numbered:
+                # 번호 배지가 라벨 역할: 큰 텍스트 | 보조 설명
+                card.big = parts[0]
+                card.sub = parts[1] if len(parts) > 1 else ""
+            elif len(parts) == 1:
+                card.big = parts[0]
+            elif len(parts) == 2:
+                card.label, card.big = parts
+            else:
+                card.label, card.big, card.sub = parts[0], parts[1], " | ".join(parts[2:])
+            grid.cards.append(card)
+        i += 1
+    return grid, i + 1  # 닫는 ::: 건너뜀
+
+
+def _parse_bar(lines: List[str], start: int, word: str) -> Tuple[Bar, int]:
+    bar = Bar(word=word)
+    i = start
+    while i < len(lines) and lines[i].strip() != ":::":
+        stripped = lines[i].strip()
+        if stripped and not bar.text:
+            parts = _split_parts(stripped)
+            if len(parts) >= 2:
+                bar.label, bar.text = parts[0], " | ".join(parts[1:])
+            else:
+                bar.text = parts[0]
+        i += 1
+    return bar, i + 1
+
+
 def _parse_slide(lines: List[str]) -> Slide:
     slide = Slide()
     target: List[Block] = slide.blocks  # ::: left / ::: right 로 전환됨
@@ -134,12 +201,13 @@ def _parse_slide(lines: List[str]) -> Slide:
             i += 1
             continue
 
+        # cards/bar 펜스는 블록이므로 여기가 아니라 _parse_block_line에서 처리
         fence = _FENCE_OPEN_RE.match(stripped)
-        if fence:
+        if fence and fence.group(1).lower() in ("notes", "left", "right"):
             kind = fence.group(1).lower()
             if kind == "notes":
                 in_fence = "notes"
-            elif kind in ("left", "right"):
+            else:
                 in_fence = kind
                 target = slide.left if kind == "left" else slide.right
                 if slide.layout is None:
@@ -179,6 +247,19 @@ def _parse_block_line(lines: List[str], i: int, target: List[Block]) -> int:
 
     if not stripped:
         return i + 1
+
+    cards_open = _CARDS_OPEN_RE.match(stripped)
+    if cards_open:
+        grid, next_i = _parse_cards(lines, i + 1, numbered=bool(cards_open.group(1)))
+        if grid.cards:
+            target.append(grid)
+        return next_i
+
+    bar_open = _BAR_OPEN_RE.match(stripped)
+    if bar_open:
+        bar, next_i = _parse_bar(lines, i + 1, word=(bar_open.group(1) or "").strip())
+        target.append(bar)
+        return next_i
 
     if stripped.startswith("```"):
         label = stripped[3:].strip()

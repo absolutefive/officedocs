@@ -157,6 +157,52 @@ def test_eyebrow_directive():
     assert deck.slides[0].title == "제목"
 
 
+def test_cards_fence():
+    from officedocs.model import CardGrid
+
+    deck = parse_document(
+        "# t\n::: cards\n- 라벨 | 큰 글 | 부가 설명\n- 단독 {tinted}\n:::\n맺음말"
+    )
+    grids = [b for b in deck.slides[0].blocks if isinstance(b, CardGrid)]
+    assert len(grids) == 1
+    cards = grids[0].cards
+    assert (cards[0].label, cards[0].big, cards[0].sub) == ("라벨", "큰 글", "부가 설명")
+    assert not cards[0].tinted
+    assert cards[1].big == "단독" and cards[1].tinted
+    assert deck.slides[0].blocks[-1].text == "맺음말"
+
+
+def test_cards_numbered():
+    from officedocs.model import CardGrid
+
+    deck = parse_document("# t\n::: cards numbered\n- 제목 | 설명\n:::")
+    grid = [b for b in deck.slides[0].blocks if isinstance(b, CardGrid)][0]
+    assert grid.numbered
+    assert grid.cards[0].big == "제목" and grid.cards[0].sub == "설명"
+    assert grid.cards[0].label == ""
+
+
+def test_bar_fence():
+    from officedocs.model import Bar
+
+    deck = parse_document("# t\n::: bar Grill Me\nTHE RX | 본문 텍스트\n:::")
+    bars = [b for b in deck.slides[0].blocks if isinstance(b, Bar)]
+    assert bars[0].word == "Grill Me"
+    assert bars[0].label == "THE RX"
+    assert bars[0].text == "본문 텍스트"
+
+
+def test_cards_inside_column():
+    from officedocs.model import CardGrid
+
+    deck = parse_document(
+        "# t\n::: left\n::: cards\n- 카드\n:::\n:::\n::: right\n- 항목\n:::"
+    )
+    slide = deck.slides[0]
+    assert any(isinstance(b, CardGrid) for b in slide.left)
+    assert slide.right[0].text == "항목"
+
+
 def test_escaped_pipe_in_table_cell():
     deck = parse_document("# t\n| 문법 |\n| --- |\n| `\\| a \\|` |")
     table = [b for b in deck.slides[0].blocks if isinstance(b, Table)][0]

@@ -169,8 +169,63 @@ def _build_agentos(colorway="teal"):
 @pytest.mark.parametrize("colorway", ["teal", "blue", "red", "orange"])
 def test_build_with_agentos_templates(colorway):
     prs = _build_agentos(colorway)
-    assert len(prs.slides) == 7
+    assert len(prs.slides) == 9
     assert prs.slide_width == 12192000  # 13.33in 와이드
+
+
+def _slide_with_text(prs, needle):
+    for slide in prs.slides:
+        for shape in slide.shapes:
+            if shape.has_text_frame and needle in shape.text_frame.text:
+                return slide
+    pytest.fail(f"{needle!r} 슬라이드를 찾지 못함")
+
+
+def test_compare_cards_side_by_side_with_arrow():
+    prs = _build_agentos()
+    slide = _slide_with_text(prs, "말하지 않은 가정 30개")
+    from pptx.enum.shapes import MSO_SHAPE_TYPE as ST
+    cards = [s for s in slide.shapes if s.shape_type == ST.AUTO_SHAPE]
+    assert len(cards) >= 3  # 카드 2장 + 강조 바
+    arrows = [
+        s for s in slide.shapes
+        if s.has_text_frame and s.text_frame.text == "→"
+    ]
+    assert arrows, "비교 카드 사이 화살표가 있어야 한다"
+    texts = [
+        s for s in slide.shapes
+        if s.has_text_frame and "그럴듯하지만" in s.text_frame.text
+    ]
+    lefts = [
+        s for s in slide.shapes
+        if s.has_text_frame and "가정 30개" in s.text_frame.text
+    ]
+    assert texts[0].left > lefts[0].left  # 좌우로 나란히
+
+
+def test_numbered_cards_have_badges():
+    prs = _build_agentos()
+    slide = _slide_with_text(prs, "공급망 리스크")
+    badges = [
+        s for s in slide.shapes
+        if s.has_text_frame and s.text_frame.text in ("1", "2", "3")
+    ]
+    assert len(badges) == 3, "번호 배지 3개가 있어야 한다"
+
+
+def test_bar_renders_word_label_text():
+    prs = _build_agentos()
+    slide = _slide_with_text(prs, "심문하게 하라")
+    words = [
+        s for s in slide.shapes
+        if s.has_text_frame and s.text_frame.text == "Grill Me"
+    ]
+    assert words, "강조 바의 큰 단어가 있어야 한다"
+    labels = [
+        s for s in slide.shapes
+        if s.has_text_frame and "THE PRESCRIPTION" in s.text_frame.text
+    ]
+    assert labels
 
 
 def test_code_window_rendered_as_shapes():
