@@ -124,9 +124,42 @@ officedocs layouts 회사공식템플릿.pptx
 
 템플릿 파일에 예시 슬라이드가 남아 있어도 빌드 시 자동 제거되고 레이아웃/마스터/테마만 사용됩니다.
 
+### 프로토타입 방식: 자리표시자가 없는 기업 템플릿
+
+실무 기업 템플릿은 디자인이 슬라이드 레이아웃의 자리표시자가 아니라 **예시 슬라이드의 텍스트 상자**에 들어있는 경우가 많습니다(예: 표지의 "프로젝트 명칭 자리 배치" 같은 안내 텍스트). 이런 템플릿은 사이드카에서 시맨틱 이름에 객체를 주면 **예시 슬라이드를 통째로 복제한 뒤 마커 텍스트를 치환**하는 방식으로 처리합니다.
+
+```json
+{
+  "title": {
+    "prototype": 0,
+    "replace": { "프로젝트(솔루션)": "title", "문서(기능)": "subtitle" },
+    "remove": ["표지타입", "필요 시 고객사 로고"]
+  },
+  "content": {
+    "prototype": 3,
+    "replace": { "속지별 타이틀": "title", "프로젝트(솔루션)": "project" },
+    "body": [0.025, 0.13, 0.95, 0.79]
+  }
+}
+```
+
+| 키 | 의미 |
+| --- | --- |
+| `prototype` | 복제할 템플릿 예시 슬라이드 인덱스 (0부터) |
+| `replace` | 마커 부분 문자열 → 채울 필드. 필드: `title` `subtitle` `project`(머리말 title) `author` `date`. 원본 도형의 글꼴/크기/색이 보존됩니다 |
+| `remove` | 해당 마커가 포함된 도형 삭제 (안내문구 제거용) |
+| `body` | 본문 블록(텍스트/표/그림)을 배치할 영역 `[left, top, width, height]`. 1.0 이하는 슬라이드 크기 대비 비율, 초과는 EMU |
+
+템플릿의 예시 슬라이드는 빌드 결과물에서 자동 제거됩니다. 마커 문자열만 알면 되므로, 새 기업 템플릿을 받았을 때 `officedocs layouts 템플릿.pptx`로 구조를 확인하고 사이드카 JSON 하나만 작성하면 됩니다.
+
 ### 번들 템플릿
 
-`templates/default.pptx`(밝은 기본 테마), `templates/dark.pptx`(어두운 테마)가 포함되어 있습니다. `scripts/make_templates.py`로 재생성할 수 있으며, 자체 템플릿 제작 시 참고용으로 쓸 수 있습니다.
+- `templates/default.pptx`(밝은 기본 테마), `templates/dark.pptx`(어두운 테마) — 레이아웃 방식. `scripts/make_templates.py`로 재생성할 수 있습니다.
+- `templates/tomato/typeA-landscape.pptx` 외 4종(TypeA/TypeB × 가로/세로) — 토마토시스템 문서 템플릿. 프로토타입 방식의 실전 예시로, 각각 사이드카 `*.layouts.json`이 함께 있습니다.
+
+```bash
+officedocs build examples/sample.md -t templates/tomato/typeA-landscape.pptx -o out.pptx
+```
 
 ## Python API
 
