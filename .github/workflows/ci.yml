@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: pip install -e .[dev]
+      - run: pytest -q
+      - name: Build example deck with both bundled templates
+        run: |
+          officedocs build examples/sample.md -t templates/default.pptx -o /tmp/out-default.pptx
+          officedocs build examples/sample.md -t templates/dark.pptx -o /tmp/out-dark.pptx
