@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>메시지 중심 보고 템플릿 · 4:3</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<style>
+  html,body{margin:0;height:100%;background:#E6E6E3}
+  a{color:#0A6B60;text-decoration:none}
+  a:hover{color:#074E46}
+</style>
+<script src="deck-stage.js"></script>
+</head>
+<body>
+<deck-stage width="1440" height="1080">
+  <section data-label="표지" data-screen-label="01" data-speaker-notes="표지. 제목을 문장형 메시지로 쓰고, 하단에 결론 지표 3개를 미리 노출합니다." style="width:100%;height:100%;box-sizing:border-box;background:#FFFFFF;font-family:Pretendard,sans-serif;padding:88px 96px;display:flex;flex-direction:column;justify-content:space-between">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div style="display:flex;align-items:center;gap:16px">
+        <div style="width:34px;height:34px;border-radius:10px;background:#0A6B60"></div>
+        <div style="font-size:22px;font-weight:700;letter-spacing:0.24em;color:#0A6B60">영업본부 · 경영진 보고</div>
+      </div>
+      <div style="font-size:22px;color:#64696F;letter-spacing:0.06em">2026. 09. 07 · 전체 8장</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:34px">
+      <div style="font-size:92px;font-weight:800;line-height:1.18;color:#17181B;letter-spacing:-0.04em">상반기는 계획을 넘었고<br>하반기는 <span style="color:#0A6B60">금융 이월</span>이 변수입니다</div>
+      <div style="font-size:30px;line-height:1.6;color:#4A5057;max-width:1190px;text-wrap:pretty">공공 조기 마감 2건으로 104% 달성. 하반기 목표는 파이프라인 전환율 기준으로 다시 세웁니다.</div>
+    </div>
+    <div style="display:flex;gap:16px">
+      <div style="flex:1;background:#F6F6F4;border-radius:16px;padding:28px 32px;display:flex;flex-direction:column;gap:8px"><div style="font-size:21px;color:#64696F">매출 달성률</div><div style="font-size:52px;font-weight:800;color:#17181B;line-height:1;letter-spacing:-0.03em">104%</div></div>
+      <div style="flex:1;background:#EAF6F3;border-radius:16px;padding:28px 32px;display:flex;flex-direction:column;gap:8px"><div style="font-size:21px;color:#0A6B60">신규 수주</div><div style="font-size:52px;font-weight:800;color:#0A6B60;line-height:1;letter-spacing:-0.03em">412억</div></div>
+      <div style="flex:1;background:#F6F6F4;border-radius:16px;padding:28px 32px;display:flex;flex-direction:column;gap:8px"><div style="font-size:21px;color:#64696F">가중 파이프라인</div><div style="font-size:52px;font-weight:800;color:#17181B;line-height:1;letter-spacing:-0.03em">618억</div></div>
+    </div>
+  </section>
+
+  <section data-label="목차 · 내비게이션" data-screen-label="02" data-speaker-notes="목차. 각 장의 한 줄 결론과 페이지 범위를 함께 보여줘, 어디서 무엇이 결정되는지 미리 알려줍니다." style="width:100%;height:100%;box-sizing:border-box;background:#FFFFFF;font-family:Pretendard,sans-serif;padding:72px 96px;display:flex;flex-direction:column">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div style="font-size:21px;font-weight:700;letter-spacing:0.24em;color:#0A6B60">CONTENTS</div>
+      <div style="font-size:21px;color:#64696F">02 / 08</div>
+    </div>
+    <div style="font-size:52px;font-weight:800;color:#17181B;letter-spacing:-0.035em;margin-top:30px">네 개의 질문과 결론</div>
+    <div style="display:flex;flex-direction:column;gap:14px;margin-top:40px;flex:1">
+      <div style="flex:1;background:#EAF6F3;border-radius:18px;padding:30px 36px;display:flex;align-items:center;gap:32px">
+        <div style="font-size:44px;font-weight:800;color:#0A6B60;letter-spacing:-0.03em;width:70px;flex:none">01</div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:8px"><div style="font-size:32px;font-weight:800;color:#17181B">상반기 실적은 계획을 넘었나</div><div style="font-size:23px;color:#4A5057">매출 337억 · 계획 대비 104% · 실질 성장 +6%</div></div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex:none"><div style="font-size:21px;color:#0A6B60;font-weight:700">p. 03 – 04</div><div style="font-size:20px;color:#64696F">2장</div></div>
+      </div>
+      <div style="flex:1;background:#F6F6F4;border-radius:18px;padding:30px 36px;display:flex;align-items:center;gap:32px">
+        <div style="font-size:44px;font-weight:800;color:#64696F;letter-spacing:-0.03em;width:70px;flex:none">02</div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:8px"><div style="font-size:32px;font-weight:800;color:#17181B">파이프라인은 목표를 받쳐주나</div><div style="font-size:23px;color:#4A5057">제안 → 협상 전환율 53%가 병목</div></div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex:none"><div style="font-size:21px;color:#64696F;font-weight:700">p. 05</div><div style="font-size:20px;color:#64696F">1장</div></div>
+      </div>
+      <div style="flex:1;background:#F6F6F4;border-radius:18px;padding:30px 36px;display:flex;align-items:center;gap:32px">
+        <div style="font-size:44px;font-weight:800;color:#64696F;letter-spacing:-0.03em;width:70px;flex:none">03</div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:8px"><div style="font-size:32px;font-weight:800;color:#17181B">무엇을 바꿀 것인가</div><div style="font-size:23px;color:#4A5057">리뷰 · 가격 · 발굴 세 가지 처방</div></div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex:none"><div style="font-size:21px;color:#64696F;font-weight:700">p. 06 – 07</div><div style="font-size:20px;color:#64696F">2장</div></div>
+      </div>
+      <div style="flex:1;background:#F6F6F4;border-radius:18px;padding:30px 36px;display:flex;align-items:center;gap:32px">
+        <div style="font-size:44px;font-weight:800;color:#64696F;letter-spacing:-0.03em;width:70px;flex:none">04</div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:8px"><div style="font-size:32px;font-weight:800;color:#17181B">무엇을 승인해야 하나</div><div style="font-size:23px;color:#4A5057">목표 조정 · 인력 2명 · 가격 시행일</div></div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex:none"><div style="font-size:21px;color:#64696F;font-weight:700">p. 08</div><div style="font-size:20px;color:#64696F">1장</div></div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;margin-top:30px">
+      <div style="flex:1;height:4px;border-radius:2px;background:#EAEAE8"><div style="width:12.5%;height:4px;border-radius:2px;background:#0A6B60"></div></div>
+      <div style="font-size:20px;color:#64696F">읽는 데 12분 · 결정 3건</div>
+    </div>
+  </section>
+
+  <section data-label="간지" data-screen-label="03" data-speaker-notes="간지. 상단 레일에서 현재 장을 채우고, 이 장에서 다룰 논점과 페이지 범위를 명시합니다." style="width:100%;height:100%;box-sizing:border-box;background:#0A6B60;font-family:Pretendard,sans-serif;padding:72px 96px;display:flex;flex-direction:column;justify-content:space-between">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="padding:10px 22px;border-radius:999px;background:#FFFFFF;color:#0A6B60;font-size:20px;font-weight:800">01 실적</div>
+      <div style="padding:10px 22px;border-radius:999px;background:rgba(255,255,255,0.16);color:#DCF0EC;font-size:20px;font-weight:700">02 파이프라인</div>
+      <div style="padding:10px 22px;border-radius:999px;background:rgba(255,255,255,0.16);color:#DCF0EC;font-size:20px;font-weight:700">03 처방</div>
+      <div style="padding:10px 22px;border-radius:999px;background:rgba(255,255,255,0.16);color:#DCF0EC;font-size:20px;font-weight:700">04 승인</div>
+      <div style="margin-left:auto;font-size:21px;color:#DCF0EC">03 / 08</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:28px">
+      <div style="font-size:26px;font-weight:700;letter-spacing:0.22em;color:#DCF0EC">CHAPTER 01 · p. 03 – 04</div>
+      <div style="font-size:84px;font-weight:800;color:#FFFFFF;letter-spacing:-0.04em;line-height:1.15">상반기 실적은<br>계획을 넘었다</div>
+      <div style="display:flex;gap:12px">
+        <div style="padding:12px 26px;border-radius:999px;background:rgba(255,255,255,0.16);color:#FFFFFF;font-size:24px;font-weight:700">달성률 104%</div>
+        <div style="padding:12px 26px;border-radius:999px;background:rgba(255,255,255,0.16);color:#FFFFFF;font-size:24px;font-weight:700">실질 성장 +6%</div>
+        <div style="padding:12px 26px;border-radius:999px;background:rgba(255,255,255,0.16);color:#FFFFFF;font-size:24px;font-weight:700">신규 고객 27%</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px">
+      <div style="flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,0.25)"><div style="width:25%;height:4px;border-radius:2px;background:#FFFFFF"></div></div>
+      <div style="font-size:21px;color:#DCF0EC">4개 장 중 1번째</div>
+    </div>
+  </section>
+
+  <section data-label="메시지" data-screen-label="04" data-speaker-notes="한 줄 메시지 장표. 큰 문장 하나와 근거 3개, 출처 한 줄. 숫자를 문장 안에 넣어 읽자마자 결론이 남게 합니다." style="width:100%;height:100%;box-sizing:border-box;background:#FFFFFF;font-family:Pretendard,sans-serif;padding:64px 96px 72px;display:flex;flex-direction:column">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="padding:9px 20px;border-radius:999px;background:#0A6B60;color:#fff;font-size:19px;font-weight:800">01 실적</div>
+      <div style="padding:9px 20px;border-radius:999px;background:#F1F1EE;color:#64696F;font-size:19px;font-weight:700">02 파이프라인</div>
+      <div style="padding:9px 20px;border-radius:999px;background:#F1F1EE;color:#64696F;font-size:19px;font-weight:700">03 처방</div>
+      <div style="padding:9px 20px;border-radius:999px;background:#F1F1EE;color:#64696F;font-size:19px;font-weight:700">04 승인</div>
+      <div style="margin-left:auto;font-size:20px;color:#64696F">04 / 08</div>
+    </div>
+    <div style="height:3px;border-radius:2px;background:#EAEAE8;margin-top:18px"><div style="width:50%;height:3px;border-radius:2px;background:#0A6B60"></div></div>
+    <div style="flex:1;margin-top:44px;display:flex;flex-direction:column;justify-content:center;gap:22px">
+      <div style="font-size:22px;font-weight:700;letter-spacing:0.2em;color:#0A6B60">THE MESSAGE</div>
+      <div style="font-size:66px;font-weight:800;color:#17181B;letter-spacing:-0.04em;line-height:1.24">초과 달성의 <span style="color:#0A6B60">3분의 1</span>은<br>단발성 대형 2건에서 나왔습니다</div>
+    </div>
+    <div style="display:flex;gap:18px;flex:none">
+      <div style="flex:1;background:#F6F6F4;border-radius:18px;padding:32px 34px;display:flex;flex-direction:column;gap:12px">
+        <div style="font-size:20px;font-weight:700;letter-spacing:0.16em;color:#64696F">기여 분해</div>
+        <div style="font-size:44px;font-weight:800;color:#17181B;letter-spacing:-0.03em">42억</div>
+        <div style="font-size:23px;line-height:1.55;color:#4A5057">조기 마감 2건이 만든 일회성 매출</div>
+      </div>
+      <div style="flex:1;background:#F6F6F4;border-radius:18px;padding:32px 34px;display:flex;flex-direction:column;gap:12px">
+        <div style="font-size:20px;font-weight:700;letter-spacing:0.16em;color:#64696F">실질 성장</div>
+        <div style="font-size:44px;font-weight:800;color:#17181B;letter-spacing:-0.03em">+6%</div>
+        <div style="font-size:23px;line-height:1.55;color:#4A5057">일회성 제외 시 전년 동기 대비</div>
+      </div>
+      <div style="flex:1;background:#EAF6F3;border-radius:18px;padding:32px 34px;display:flex;flex-direction:column;gap:12px">
+        <div style="font-size:20px;font-weight:700;letter-spacing:0.16em;color:#0A6B60">그래서</div>
+        <div style="font-size:44px;font-weight:800;color:#0A6B60;letter-spacing:-0.03em">중형 딜</div>
+        <div style="font-size:23px;line-height:1.55;color:#0A6B60">3~8억 구간 비중을 40%까지</div>
+      </div>
+    </div>
+    <div style="font-size:20px;color:#64696F;margin-top:26px">출처 · 6월 30일 마감 실적, 부가세 제외 기준</div>
+  </section>
+
+  <section data-label="비교 · 전환" data-screen-label="05" data-speaker-notes="현재와 목표를 나란히. 가운데 화살표로 방향을 보여주고, 아래 처방 바에 실행 문장을 한 줄로 답니다." style="width:100%;height:100%;box-sizing:border-box;background:#FFFFFF;font-family:Pretendard,sans-serif;padding:64px 96px 72px;display:flex;flex-direction:column">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="padding:9px 20px;border-radius:999px;background:#F1F1EE;color:#64696F;font-size:19px;font-weight:700">01 실적</div>
+      <div style="padding:9px 20px;border-radius:999px;background:#0A6B60;color:#fff;font-size:19px;font-weight:800">02 파이프라인</div>
+      <div style="padding:9px 20px;border-radius:999px;background:#F1F1EE;color:#64696F;font-size:19px;font-weight:700">03 처방</div>
+      <div style="padding:9px 20px;border-radius:999px;background:#F1F1EE;color:#64696F;font-size:19px;font-weight:700">04 승인</div>
+      <div style="margin-left:auto;font-size:20px;color:#64696F">05 / 08</div>
+    </div>
+    <div style="height:3px;border-radius:2px;background:#EAEAE8;margin-top:18px"><div style="width:62.5%;height:3px;border-radius:2px;background:#0A6B60"></div></div>
+    <div style="margin-top:44px;display:flex;flex-direction:column;gap:16px">
+      <div style="font-size:22px;font-weight:700;letter-spacing:0.2em;color:#0A6B60">THE GAP</div>
+      <div style="font-size:56px;font-weight:800;color:#17181B;letter-spacing:-0.04em">협상 단계에서 8%p가 새고 있습니다</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:24px;margin-top:44px;flex:1">
+      <div style="flex:1;background:#F6F6F4;border-radius:20px;padding:38px 40px;display:flex;flex-direction:column;gap:14px">
+        <div style="font-size:20px;font-weight:700;letter-spacing:0.18em;color:#64696F">지금</div>
+        <div style="font-size:56px;font-weight:800;color:#17181B;letter-spacing:-0.03em">53%</div>
+        <div style="font-size:24px;line-height:1.55;color:#4A5057">제안 → 협상 전환율 · 평균 리드타임 112일</div>
+      </div>
+      <div style="font-size:44px;color:#C9CDD1;flex:none">→</div>
+      <div style="flex:1;background:#EAF6F3;border-radius:20px;padding:38px 40px;display:flex;flex-direction:column;gap:14px;border:1px solid #BFE6DF;box-sizing:border-box">
+        <div style="font-size:20px;font-weight:700;letter-spacing:0.18em;color:#0A6B60">목표</div>
+        <div style="font-size:56px;font-weight:800;color:#0A6B60;letter-spacing:-0.03em">61%</div>
+        <div style="font-size:24px;line-height:1.55;color:#0A6B60">전년 수준 회복 · 리드타임 90일 이내</div>
+      </div>
+    </div>
+    <div style="margin-top:32px;background:#EAF6F3;border-radius:18px;padding:26px 34px;display:flex;align-items:center;gap:28px;flex:none">
+      <div style="font-size:30px;font-weight:800;color:#0A6B60;flex:none">REVIEW</div>
+      <div style="width:1px;height:44px;background:#BFE6DF;flex:none"></div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:6px"><div style="font-size:19px;font-weight:700;letter-spacing:0.16em;color:#0A6B60">처방</div><div style="font-size:27px;font-weight:800;color:#17181B">협상 3주 초과 딜은 임원 동행 리뷰를 의무화한다</div></div>
+      <div style="font-size:21px;color:#0A6B60;text-align:right;flex:none;line-height:1.5">영업임원<br>상시</div>
+    </div>
+  </section>
+
+  <section data-label="지표 · 차트" data-screen-label="06" data-speaker-notes="추이는 막대 하나로. 결론 문장을 차트 위에 두고, 오른쪽에 읽는 법 3줄을 답니다." style="width:100%;height:100%;box-sizing:border-box;background:#FFFFFF;font-family:Pretendard,sans-serif;padding:64px 96px 72px;display:flex;flex-direction:column">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="padding:9px 20px;border-radius:999px;background:#F1F1EE;color:#64696F;font-size:19px;font-weight:700">01 실적</div>
+      <div style="padding:9px 20px;border-radius:999px;background:#0A6B60;color:#fff;font-size:19px;font-weight:800">02 파이프라인</div>
+      <div style="padding:9px 20px;border-radius:999px;background:#F1F1EE;color:#64696F;font-size:19px;font-weight:700">03 처방</div>
+      <div style="padding:9px 20px;border-radius:999px;background:#F1F1EE;color:#64696F;font-size:19px;font-weight:700">04 승인</div>
+      <div style="margin-left:auto;font-size:20px;color:#64696F">06 / 08</div>
+    </div>
+    <div style="height:3px;border-radius:2px;background:#EAEAE8;margin-top:18px"><div style="width:75%;height:3px;border-radius:2px;background:#0A6B60"></div></div>
+    <div style="margin-top:40px;font-size:50px;font-weight:800;color:#17181B;letter-spacing:-0.035em">6개 분기 연속 계획선 위, 변동성은 커지고 있습니다</div>
+    <div style="display:flex;gap:40px;margin-top:40px;flex:1">
+      <div style="flex:1.6;background:#F6F6F4;border-radius:20px;padding:34px 36px;display:flex;flex-direction:column">
+        <div style="display:flex;align-items:center;gap:22px;font-size:20px;color:#4A5057">
+          <div style="display:flex;gap:9px;align-items:center"><div style="width:16px;height:16px;border-radius:4px;background:#0A6B60"></div>실적</div>
+          <div style="display:flex;gap:9px;align-items:center"><div style="width:16px;height:16px;border-radius:4px;background:#D6DBD9"></div>계획</div>
+          <div style="margin-left:auto;font-size:19px;color:#64696F">단위 · 억원</div>
+        </div>
+        <div style="flex:1;display:flex;align-items:flex-end;gap:26px;margin-top:26px">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:10px"><div style="font-size:20px;color:#64696F">128</div><div style="width:100%;display:flex;gap:5px;align-items:flex-end"><div style="flex:1;height:322px;background:#D6DBD9;border-radius:6px 6px 0 0"></div><div style="flex:1;height:307px;background:#0A6B60;border-radius:6px 6px 0 0"></div></div></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:10px"><div style="font-size:20px;color:#64696F">142</div><div style="width:100%;display:flex;gap:5px;align-items:flex-end"><div style="flex:1;height:336px;background:#D6DBD9;border-radius:6px 6px 0 0"></div><div style="flex:1;height:356px;background:#0A6B60;border-radius:6px 6px 0 0"></div></div></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:10px"><div style="font-size:20px;color:#64696F">151</div><div style="width:100%;display:flex;gap:5px;align-items:flex-end"><div style="flex:1;height:365px;background:#D6DBD9;border-radius:6px 6px 0 0"></div><div style="flex:1;height:380px;background:#0A6B60;border-radius:6px 6px 0 0"></div></div></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:10px"><div style="font-size:20px;color:#64696F">168</div><div style="width:100%;display:flex;gap:5px;align-items:flex-end"><div style="flex:1;height:404px;background:#D6DBD9;border-radius:6px 6px 0 0"></div><div style="flex:1;height:423px;background:#0A6B60;border-radius:6px 6px 0 0"></div></div></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:10px"><div style="font-size:20px;color:#17181B;font-weight:700">159</div><div style="width:100%;display:flex;gap:5px;align-items:flex-end"><div style="flex:1;height:389px;background:#D6DBD9;border-radius:6px 6px 0 0"></div><div style="flex:1;height:399px;background:#0A6B60;border-radius:6px 6px 0 0"></div></div></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:10px"><div style="font-size:20px;color:#17181B;font-weight:700">178</div><div style="width:100%;display:flex;gap:5px;align-items:flex-end"><div style="flex:1;height:418px;background:#D6DBD9;border-radius:6px 6px 0 0"></div><div style="flex:1;height:447px;background:#0A6B60;border-radius:6px 6px 0 0"></div></div></div>
+        </div>
+        <div style="display:flex;gap:26px;margin-top:14px">
+          <div style="flex:1;text-align:center;font-size:19px;color:#64696F">24 3Q</div>
+          <div style="flex:1;text-align:center;font-size:19px;color:#64696F">24 4Q</div>
+          <div style="flex:1;text-align:center;font-size:19px;color:#64696F">25 1Q</div>
+          <div style="flex:1;text-align:center;font-size:19px;color:#64696F">25 2Q</div>
+          <div style="flex:1;text-align:center;font-size:19px;color:#17181B;font-weight:700">26 1Q</div>
+          <div style="flex:1;text-align:center;font-size:19px;color:#17181B;font-weight:700">26 2Q</div>
+        </div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:16px">
+        <div style="font-size:20px;font-weight:700;letter-spacing:0.16em;color:#64696F">읽는 법</div>
+        <div style="display:flex;gap:16px"><div style="font-size:23px;font-weight:800;color:#0A6B60;flex:none">01</div><div style="font-size:23px;line-height:1.55;color:#4A5057">1분기 둔화는 공공 예산 편성 시점 때문</div></div>
+        <div style="display:flex;gap:16px"><div style="font-size:23px;font-weight:800;color:#0A6B60;flex:none">02</div><div style="font-size:23px;line-height:1.55;color:#4A5057">2분기 회복분에는 일회성 42억이 포함</div></div>
+        <div style="display:flex;gap:16px"><div style="font-size:23px;font-weight:800;color:#0A6B60;flex:none">03</div><div style="font-size:23px;line-height:1.55;color:#4A5057">3분기는 이월 인식 시점에 따라 ±24억</div></div>
+        <div style="margin-top:auto;background:#F6F6F4;border-radius:16px;padding:24px 28px;display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;justify-content:space-between;font-size:22px;color:#4A5057"><div>계획 대비 평균 편차</div><div style="font-weight:800;color:#0A6B60">+3.4%</div></div>
+          <div style="display:flex;justify-content:space-between;font-size:22px;color:#4A5057"><div>분기 변동성</div><div style="font-weight:800;color:#17181B">17.8</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section data-label="처방 3" data-speaker-notes="처방 3개. 한 줄 문장 + 담당 + 기한. 좌측 굵은 키워드로 회의 중 호명이 쉬워집니다." data-screen-label="07" style="width:100%;height:100%;box-sizing:border-box;background:#FFFFFF;font-family:Pretendard,sans-serif;padding:64px 96px 72px;display:flex;flex-direction:column">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="padding:9px 20px;border-radius:999px;background:#F1F1EE;color:#64696F;font-size:19px;font-weight:700">01 실적</div>
+      <div style="padding:9px 20px;border-radius:999px;background:#F1F1EE;color:#64696F;font-size:19px;font-weight:700">02 파이프라인</div>
+      <div style="padding:9px 20px;border-radius:999px;background:#0A6B60;color:#fff;font-size:19px;font-weight:800">03 처방</div>
+      <div style="padding:9px 20px;border-radius:999px;background:#F1F1EE;color:#64696F;font-size:19px;font-weight:700">04 승인</div>
+      <div style="margin-left:auto;font-size:20px;color:#64696F">07 / 08</div>
+    </div>
+    <div style="height:3px;border-radius:2px;background:#EAEAE8;margin-top:18px"><div style="width:87.5%;height:3px;border-radius:2px;background:#0A6B60"></div></div>
+    <div style="margin-top:40px;display:flex;flex-direction:column;gap:14px">
+      <div style="font-size:22px;font-weight:700;letter-spacing:0.2em;color:#0A6B60">THE PRESCRIPTION</div>
+      <div style="font-size:52px;font-weight:800;color:#17181B;letter-spacing:-0.035em">하반기에 바꿀 것은 세 가지입니다</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:18px;margin-top:40px;flex:1">
+      <div style="flex:1;background:#EAF6F3;border-radius:20px;padding:0 36px;display:flex;align-items:center;gap:30px">
+        <div style="font-size:34px;font-weight:800;color:#0A6B60;width:180px;flex:none">REVIEW</div>
+        <div style="width:1px;height:56px;background:#BFE6DF;flex:none"></div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:8px"><div style="font-size:19px;font-weight:700;letter-spacing:0.16em;color:#0A6B60">협상 지연 차단</div><div style="font-size:29px;font-weight:800;color:#17181B">3주 초과 딜은 임원이 함께 들어간다</div></div>
+        <div style="font-size:21px;color:#0A6B60;text-align:right;flex:none;line-height:1.5">영업임원<br>상시</div>
+      </div>
+      <div style="flex:1;background:#EAF6F3;border-radius:20px;padding:0 36px;display:flex;align-items:center;gap:30px">
+        <div style="font-size:34px;font-weight:800;color:#0A6B60;width:180px;flex:none">PRICE</div>
+        <div style="width:1px;height:56px;background:#BFE6DF;flex:none"></div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:8px"><div style="font-size:19px;font-weight:700;letter-spacing:0.16em;color:#0A6B60">단가 하락 방어</div><div style="font-size:29px;font-weight:800;color:#17181B">10월 1일부터 새 단가 체계를 적용한다</div></div>
+        <div style="font-size:21px;color:#0A6B60;text-align:right;flex:none;line-height:1.5">최영준<br>10/01</div>
+      </div>
+      <div style="flex:1;background:#F6F6F4;border-radius:20px;padding:0 36px;display:flex;align-items:center;gap:30px">
+        <div style="font-size:34px;font-weight:800;color:#64696F;width:180px;flex:none">FUNNEL</div>
+        <div style="width:1px;height:56px;background:#DEDEDA;flex:none"></div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:8px"><div style="font-size:19px;font-weight:700;letter-spacing:0.16em;color:#64696F">중형 딜 확대</div><div style="font-size:29px;font-weight:800;color:#17181B">월 발굴 목표를 12건에서 16건으로 올린다</div></div>
+        <div style="font-size:21px;color:#4A5057;text-align:right;flex:none;line-height:1.5">이수민<br>4분기</div>
+      </div>
+    </div>
+  </section>
+
+  <section data-label="도형 툴킷" data-screen-label="08" data-speaker-notes="장표를 추가할 때 이 페이지의 도형을 복사해 씁니다. 라운드 20px 카드, 999px 칩, 상단 레일이 이 템플릿의 기본 문법입니다." style="width:100%;height:100%;box-sizing:border-box;background:#FFFFFF;font-family:Pretendard,sans-serif;padding:60px 96px;display:flex;flex-direction:column">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div style="font-size:21px;font-weight:700;letter-spacing:0.24em;color:#0A6B60">TOOLKIT</div>
+      <div style="font-size:21px;color:#64696F">장표 추가용 도형 세트 · 08 / 08</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px 56px;margin-top:34px;flex:1">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="font-size:19px;letter-spacing:0.16em;color:#64696F">위치 레일 · 진행 바</div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="padding:9px 20px;border-radius:999px;background:#0A6B60;color:#fff;font-size:19px;font-weight:800">01 장</div>
+          <div style="padding:9px 20px;border-radius:999px;background:#F1F1EE;color:#64696F;font-size:19px;font-weight:700">02 장</div>
+          <div style="padding:9px 20px;border-radius:999px;background:#F1F1EE;color:#64696F;font-size:19px;font-weight:700">03 장</div>
+          <div style="margin-left:auto;font-size:20px;color:#64696F">04 / 08</div>
+        </div>
+        <div style="height:3px;border-radius:2px;background:#EAEAE8"><div style="width:50%;height:3px;border-radius:2px;background:#0A6B60"></div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="font-size:19px;letter-spacing:0.16em;color:#64696F">상태 칩 · 배지</div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <div style="padding:10px 22px;border-radius:999px;background:#0A6B60;color:#fff;font-size:20px;font-weight:800">확정</div>
+          <div style="padding:10px 22px;border-radius:999px;background:#EAF6F3;color:#0A6B60;font-size:20px;font-weight:700">협의중</div>
+          <div style="padding:10px 22px;border-radius:999px;background:#F1F1EE;color:#64696F;font-size:20px;font-weight:700">보류</div>
+          <div style="padding:10px 22px;border-radius:999px;background:#FBEDE7;color:#C2552C;font-size:20px;font-weight:700">리스크</div>
+          <div style="width:40px;height:40px;border-radius:12px;background:#0A6B60;color:#fff;font-size:20px;font-weight:800;display:flex;align-items:center;justify-content:center">1</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="font-size:19px;letter-spacing:0.16em;color:#64696F">처방 바 (키워드 + 문장 + 담당)</div>
+        <div style="background:#EAF6F3;border-radius:18px;padding:22px 30px;display:flex;align-items:center;gap:24px">
+          <div style="font-size:28px;font-weight:800;color:#0A6B60;width:140px;flex:none">KEYWORD</div>
+          <div style="width:1px;height:40px;background:#BFE6DF;flex:none"></div>
+          <div style="flex:1;font-size:25px;font-weight:800;color:#17181B">한 줄로 쓰는 실행 문장</div>
+          <div style="font-size:20px;color:#0A6B60;text-align:right;flex:none;line-height:1.5">담당<br>기한</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="font-size:19px;letter-spacing:0.16em;color:#64696F">비교 카드 · 화살표</div>
+        <div style="display:flex;align-items:center;gap:16px">
+          <div style="flex:1;background:#F6F6F4;border-radius:18px;padding:20px 24px;display:flex;flex-direction:column;gap:6px"><div style="font-size:19px;color:#64696F">지금</div><div style="font-size:34px;font-weight:800;color:#17181B">53%</div></div>
+          <div style="font-size:30px;color:#C9CDD1;flex:none">→</div>
+          <div style="flex:1;background:#EAF6F3;border-radius:18px;padding:20px 24px;display:flex;flex-direction:column;gap:6px;border:1px solid #BFE6DF;box-sizing:border-box"><div style="font-size:19px;color:#0A6B60">목표</div><div style="font-size:34px;font-weight:800;color:#0A6B60">61%</div></div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="font-size:19px;letter-spacing:0.16em;color:#64696F">지표 카드 · 막대</div>
+        <div style="display:flex;gap:14px">
+          <div style="flex:1;background:#F6F6F4;border-radius:16px;padding:20px 24px;display:flex;flex-direction:column;gap:6px"><div style="font-size:19px;color:#64696F">라벨</div><div style="font-size:34px;font-weight:800;color:#17181B">337억</div></div>
+          <div style="flex:1;background:#EAF6F3;border-radius:16px;padding:20px 24px;display:flex;flex-direction:column;gap:6px"><div style="font-size:19px;color:#0A6B60">라벨</div><div style="font-size:34px;font-weight:800;color:#0A6B60">104%</div></div>
+          <div style="flex:none;width:120px;display:flex;align-items:flex-end;gap:6px;height:88px"><div style="flex:1;height:48px;background:#D6DBD9;border-radius:5px 5px 0 0"></div><div style="flex:1;height:66px;background:#0A6B60;border-radius:5px 5px 0 0"></div><div style="flex:1;height:88px;background:#0A6B60;border-radius:5px 5px 0 0"></div></div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="font-size:19px;letter-spacing:0.16em;color:#64696F">목차 행 · 페이지 범위</div>
+        <div style="background:#F6F6F4;border-radius:18px;padding:22px 28px;display:flex;align-items:center;gap:24px">
+          <div style="font-size:34px;font-weight:800;color:#64696F;width:56px;flex:none">02</div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:4px"><div style="font-size:25px;font-weight:800;color:#17181B">장 제목</div><div style="font-size:20px;color:#4A5057">한 줄 결론</div></div>
+          <div style="font-size:20px;color:#64696F;font-weight:700;flex:none">p. 05 – 06</div>
+        </div>
+      </div>
+    </div>
+    <div style="font-size:19px;color:#64696F;margin-top:18px">색 · 먹색 #17181B / 본문 #4A5057 / 보조 #64696F / 포인트 #0A6B60 / 틴트 #EAF6F3 / 패널 #F6F6F4 · 라운드 카드 20px, 칩 999px</div>
+  </section>
+</deck-stage>
+</body>
+</html>

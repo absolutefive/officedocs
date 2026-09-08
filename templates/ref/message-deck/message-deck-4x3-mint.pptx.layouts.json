@@ -1,0 +1,68 @@
+{
+  "title": {
+    "prototype": 0,
+    "replace": {
+      "프로젝트(솔루션)": "title",
+      "문서(기능)": "subtitle",
+      "YYYY. MM. DD": "date"
+    }
+  },
+  "section": {
+    "prototype": 2,
+    "replace": {
+      "섹션 제목": "title"
+    }
+  },
+  "content": {
+    "prototype": 3,
+    "replace": {
+      "속지별 타이틀": "title",
+      "프로젝트(솔루션)": "project"
+    },
+    "body": [
+      0.067,
+      0.3,
+      0.867,
+      0.6
+    ]
+  },
+  "two-content": {
+    "prototype": 3,
+    "replace": {
+      "속지별 타이틀": "title",
+      "프로젝트(솔루션)": "project"
+    },
+    "body": [
+      0.067,
+      0.3,
+      0.867,
+      0.6
+    ]
+  },
+  "title-only": {
+    "prototype": 3,
+    "replace": {
+      "속지별 타이틀": "title",
+      "프로젝트(솔루션)": "project"
+    },
+    "body": [
+      0.067,
+      0.3,
+      0.867,
+      0.6
+    ]
+  },
+  "blank": {
+    "prototype": 3,
+    "replace": {
+      "속지별 타이틀": "title",
+      "프로젝트(솔루션)": "project"
+    },
+    "body": [
+      0.067,
+      0.3,
+      0.867,
+      0.6
+    ]
+  }
+}

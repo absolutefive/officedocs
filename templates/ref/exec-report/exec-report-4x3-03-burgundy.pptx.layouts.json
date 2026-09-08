@@ -1,0 +1,85 @@
+{
+  "title": {
+    "prototype": 0,
+    "replace": {
+      "프로젝트(솔루션)": "title",
+      "문서(기능)": "subtitle",
+      "작성자명": "author",
+      "YYYY. MM. DD": "date"
+    }
+  },
+  "section": {
+    "prototype": 1,
+    "replace": {
+      "섹션 제목": "title",
+      "프로젝트(솔루션)": "project"
+    },
+    "remove": [
+      "01 / 04"
+    ]
+  },
+  "content": {
+    "prototype": 3,
+    "replace": {
+      "속지별 타이틀": "title",
+      "프로젝트(솔루션)": "project"
+    },
+    "remove": [
+      "섹션명"
+    ],
+    "body": [
+      0.058,
+      0.19,
+      0.884,
+      0.7
+    ]
+  },
+  "two-content": {
+    "prototype": 3,
+    "replace": {
+      "속지별 타이틀": "title",
+      "프로젝트(솔루션)": "project"
+    },
+    "remove": [
+      "섹션명"
+    ],
+    "body": [
+      0.058,
+      0.19,
+      0.884,
+      0.7
+    ]
+  },
+  "title-only": {
+    "prototype": 3,
+    "replace": {
+      "속지별 타이틀": "title",
+      "프로젝트(솔루션)": "project"
+    },
+    "remove": [
+      "섹션명"
+    ],
+    "body": [
+      0.058,
+      0.19,
+      0.884,
+      0.7
+    ]
+  },
+  "blank": {
+    "prototype": 3,
+    "replace": {
+      "속지별 타이틀": "title",
+      "프로젝트(솔루션)": "project"
+    },
+    "remove": [
+      "섹션명"
+    ],
+    "body": [
+      0.058,
+      0.19,
+      0.884,
+      0.7
+    ]
+  }
+}
